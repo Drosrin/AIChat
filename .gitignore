@@ -1,0 +1,26 @@
+# --- Unity & BepInEx ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Bb]in/
+[Mm]emoryCaptures/
+
+# --- Visual Studio ---
+.vs/
+*.user
+*.suo
+*.userprefs
+*.pidb
+*.booproj
+*.svnj
+*.scc
+
+Libs/
+Assembly-CSharp.dll
+UnityEngine*.dll
+BepInEx.dll
+
+secrets.json
+*.cfg

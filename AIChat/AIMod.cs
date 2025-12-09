@@ -25,8 +25,8 @@ namespace ChillAIMod
         private ConfigEntry<string> _targetLangConfig;
         private ConfigEntry<string> _personaConfig;
 
-        private const string ChatApiUrl = "https://openrouter.ai/api/v1/chat/completions";
-
+        //private const string ChatApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+        private ConfigEntry<string> _chatApiUrlConfig;
         // ================= 【UI 变量】 =================
         private bool _showInputWindow = false;
         private bool _showSettings = false;
@@ -83,8 +83,10 @@ namespace ChillAIMod
             _audioSource = this.gameObject.AddComponent<AudioSource>();
             _audioSource.playOnAwake = false;
             _audioSource.volume = 1.0f;
-
             // 绑定配置
+            _chatApiUrlConfig = Config.Bind("1. General", "ApiUrl",
+                "https://openrouter.ai/api/v1/chat/completions",
+                "LLM API 地址 (支持 OpenAI/中转站)");
             _apiKeyConfig = Config.Bind("1. General", "APIKey", "sk-or-v1-PasteYourKeyHere", "OpenRouter API Key");
             _modelConfig = Config.Bind("1. General", "ModelName", "openai/gpt-3.5-turbo", "LLM Model Name");
 
@@ -171,6 +173,8 @@ namespace ChillAIMod
                 GUILayout.Space(10);
                 GUILayout.BeginVertical("box");
                 GUILayout.Label("<b>--- 基础配置 ---</b>");
+                GUILayout.Label("API URL:");
+                _chatApiUrlConfig.Value = GUILayout.TextField(_chatApiUrlConfig.Value);
                 GUILayout.Label("API Key:");
                 _apiKeyConfig.Value = GUILayout.TextField(_apiKeyConfig.Value);
                 GUILayout.Label("Model Name:");
@@ -263,7 +267,7 @@ namespace ChillAIMod
             string fullResponse = "";
 
             // 3. 发送 Chat 请求
-            using (UnityWebRequest request = new UnityWebRequest(ChatApiUrl, "POST"))
+            using (UnityWebRequest request = new UnityWebRequest(_chatApiUrlConfig.Value, "POST"))
             {
                 byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody);
                 request.uploadHandler = new UploadHandlerRaw(bodyRaw);
